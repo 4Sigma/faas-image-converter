@@ -1,0 +1,92 @@
+{
+    "img":{
+        "storageType": "remote-http",
+        "src": "https://picsum.photos/5000/4000"
+    },
+    "format": [
+        {
+            "format": "webp",
+            "size": [
+                {
+                    "width": "100",
+                    "height": "100"
+                },
+                {
+                    "width": "200",
+                    "height": "200"
+                },
+                {
+                    "width": "300",
+                    "height": "300"
+                },
+                {
+                    "width": "500",
+                    "height": "500"
+                }
+            ]
+        },
+        {
+            "format": "jpg",
+            "size": [
+                {
+                    "width": "100",
+                    "height": "100"
+                },
+                {
+                    "width": "200",
+                    "height": "200"
+                },
+                {
+                    "width": "300",
+                    "height": "300"
+                },
+                {
+                    "width": "500",
+                    "height": "500"
+                }
+            ]
+        },
+        {
+            "format": "png",
+            "size": [
+                {
+                    "width": "100",
+                    "height": "100"
+                },
+                {
+                    "width": "200",
+                    "height": "200"
+                },
+                {
+                    "width": "300",
+                    "height": "300"
+                },
+                {
+                    "width": "500",
+                    "height": "500"
+                }
+            ]
+        },
+        {
+            "format": "avif",
+            "size": [
+                {
+                    "width": "100",
+                    "height": "100"
+                },
+                {
+                    "width": "200",
+                    "height": "200"
+                },
+                {
+                    "width": "300",
+                    "height": "300"
+                },
+                {
+                    "width": "500",
+                    "height": "500"
+                }
+            ]
+        }
+    ]
+}
