@@ -1,9 +1,11 @@
 {
-    "img":{
+    "inputImage":{
         "storageType": "remote-http",
-        "src": "https://picsum.photos/5000/4000"
+        "storageData": {
+            "url": "https://picsum.photos/5000/4000"
+        }
     },
-    "format": [
+    "outputFormats": [
         {
             "format": "webp",
             "size": [
@@ -27,27 +29,6 @@
         },
         {
             "format": "jpg",
-            "size": [
-                {
-                    "width": "100",
-                    "height": "100"
-                },
-                {
-                    "width": "200",
-                    "height": "200"
-                },
-                {
-                    "width": "300",
-                    "height": "300"
-                },
-                {
-                    "width": "500",
-                    "height": "500"
-                }
-            ]
-        },
-        {
-            "format": "png",
             "size": [
                 {
                     "width": "100",
