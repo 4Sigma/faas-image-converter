@@ -3,9 +3,9 @@ package function
 import (
 	"encoding/json"
 	"fmt"
+	"handler/function/pkg/imageprocessing"
 	"handler/function/pkg/storage"
 	"handler/function/pkg/utils"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/davidbyttow/govips/v2/vips"
@@ -22,10 +22,6 @@ func Handle(req handler.Request) (handler.Response, error) {
 	if err != nil {
 		return handler.Response{}, err
 	}
-	//location, err := storage.InitStorage()
-	// if err != nil {
-	// 	return handler.Response{}, err
-	// }
 
 	fileName, err := storage.DownloadFile(dataImage)
 	if err != nil {
@@ -37,33 +33,16 @@ func Handle(req handler.Request) (handler.Response, error) {
 	vips.Startup(nil)
 	defer vips.Shutdown()
 
-	image1, err := vips.NewImageFromFile(fileName)
-	ep := vips.NewDefaultJPEGExportParams()
-	image1bytes, _, err := image1.Export(ep)
-	err = ioutil.WriteFile("output.jpg", image1bytes, 0644)
+	fmt.Println("File name: ", fileName)
 
-	if err != nil {
-		return handler.Response{}, err
-	}
-
-	ep = vips.NewDefaultWEBPExportParams()
-	image1bytes, _, err = image1.Export(ep)
-	err = ioutil.WriteFile("output.webp", image1bytes, 0644)
-
-	if err != nil {
-		return handler.Response{}, err
-	}
-
-	epaAvif := vips.NewAvifExportParams()
-	epaAvif.Quality = 90
-	epaAvif.Lossless = false
-	image1bytes, _, err = image1.ExportAvif(epaAvif)
-
-	if err != nil {
-		return handler.Response{}, err
-	}
-
-	err = ioutil.WriteFile("output.avif", image1bytes, 0644)
+	/* 	for _, format := range outputFormat {
+		for _, size := range format.Size {
+			fmt.Println("Format: ", format.Format, " Size: ", size.Width, "x", size.Height)
+			ep := vips.NewDefaultJPEGExportParams()
+		}
+	} */
+	//ep := vips.NewThumbnailWithSizeFromFile(image, 200, 200)
+	imageprocessing.ImageConverter(dataImage.OutputFormats, fileName)
 
 	return handler.Response{
 		Body:       []byte(out),

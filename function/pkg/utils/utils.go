@@ -9,18 +9,20 @@ import (
 	_ "github.com/graymeta/stow/s3"
 )
 
+type OutputFormats []struct {
+	Format string `json:"format"`
+	Size   []struct {
+		Width  string `json:"width"`
+		Height string `json:"height"`
+	} `json:"size"`
+}
+
 type ImageGeneration struct {
 	InputImage struct {
 		StorageType string      `json:"storageType"`
 		StorageData interface{} `json:"storageData"`
 	} `json:"inputImage"`
-	OutputFormats []struct {
-		Format string `json:"format"`
-		Size   []struct {
-			Width  string `json:"width"`
-			Height string `json:"height"`
-		} `json:"size"`
-	} `json:"outputFormats"`
+	OutputFormats OutputFormats `json:"outputFormats"`
 }
 
 func CheckError(err error) {
