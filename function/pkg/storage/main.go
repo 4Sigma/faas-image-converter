@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"handler/function/pkg/utils"
@@ -33,44 +34,59 @@ func InitStorage() (stow.Location, error) {
 	return location, err
 }
 
-func DownloadFile(image utils.ImageGeneration) error {
-	if image.Img.StorageType == "remote-http" {
-		err := downloadRemoteHttp(image)
+func DownloadFile(image utils.ImageGeneration) (fileName string, err error) {
+	if image.InputImage.StorageType == "remote-http" {
+		fileName, err = downloadRemoteHttp(image)
 		if err != nil {
-			return err
+			return "", err
 		}
 	} else {
-		return errors.New("Unknown storage type")
+		return fileName, errors.New("Unknown storage type")
 	}
-	return nil
-
+	if fileName != "" {
+		return fileName, nil
+	} else {
+		return "", errors.New("File name is empty")
+	}
 }
 
-func downloadRemoteHttp(image utils.ImageGeneration) error {
-	imageUrl := image.Img.Src
+func downloadRemoteHttp(image utils.ImageGeneration) (filename string, err error) {
+
+	type RemoteHttp struct {
+		StorageType string `json:"storageType"`
+		StorageData struct {
+			URL string `json:"url"`
+		} `json:"storageData"`
+	}
+
+	var remoteHttp RemoteHttp
+	StorageConfig, err := json.Marshal(image.InputImage)
+	err = json.Unmarshal(StorageConfig, &remoteHttp)
+
+	imageUrl := remoteHttp.StorageData.URL
 	fileName := filepath.Base(imageUrl)
 
 	//Get the response bytes from the url
 	response, err := http.Get(imageUrl)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer response.Body.Close()
 
 	if response.StatusCode != 200 {
-		return errors.New("Received non 200 response code")
+		return "", errors.New("Received non 200 response code")
 	}
 
 	buf, err := io.ReadAll(response.Body)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	fExtension := filepath.Ext(fileName)
 	if fExtension == "" {
 		kind, _ := filetype.Match(buf)
 		if kind == filetype.Unknown {
-			return errors.New("Unknown file type")
+			return "", errors.New("Unknown file type")
 		}
 		fExtension = kind.Extension
 		fileName = "tmp/" + fileName + "." + fExtension
@@ -79,15 +95,15 @@ func downloadRemoteHttp(image utils.ImageGeneration) error {
 	//Create a empty file
 	file, err := os.Create(fileName)
 	if err != nil {
-		return err
+		return "", err
 	}
 	_, err = file.Write(buf)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer file.Close()
 
-	return nil
+	return fileName, nil
 }
 
 /* err = stow.WalkContainers(location, stow.NoPrefix, 100,

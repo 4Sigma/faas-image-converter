@@ -10,17 +10,17 @@ import (
 )
 
 type ImageGeneration struct {
-	Img struct {
-		StorageType string `json:"StorageType"`
-		Src         string `json:"src"`
-	} `json:"img"`
-	Format []struct {
+	InputImage struct {
+		StorageType string      `json:"storageType"`
+		StorageData interface{} `json:"storageData"`
+	} `json:"inputImage"`
+	OutputFormats []struct {
 		Format string `json:"format"`
 		Size   []struct {
 			Width  string `json:"width"`
 			Height string `json:"height"`
 		} `json:"size"`
-	} `json:"format"`
+	} `json:"outputFormats"`
 }
 
 func CheckError(err error) {

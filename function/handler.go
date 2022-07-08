@@ -2,10 +2,13 @@ package function
 
 import (
 	"encoding/json"
+	"fmt"
 	"handler/function/pkg/storage"
 	"handler/function/pkg/utils"
+	"io/ioutil"
 	"net/http"
 
+	"github.com/davidbyttow/govips/v2/vips"
 	handler "github.com/openfaas/templates-sdk/go-http"
 )
 
@@ -24,43 +27,43 @@ func Handle(req handler.Request) (handler.Response, error) {
 	// 	return handler.Response{}, err
 	// }
 
-	err = storage.DownloadFile(dataImage)
+	fileName, err := storage.DownloadFile(dataImage)
 	if err != nil {
 		return handler.Response{}, err
 	}
 
-	// vips.Startup(nil)
-	// defer vips.Shutdown()
+	fmt.Println("File name: ", fileName)
 
-	/* 	fileName := filepath.Base(dataImage.Img)
+	vips.Startup(nil)
+	defer vips.Shutdown()
 
-	   	image1, err := vips.NewImageFromFile(fileName)
-	   	ep := vips.NewDefaultJPEGExportParams()
-	   	image1bytes, _, err := image1.Export(ep)
-	   	err = ioutil.WriteFile("output.jpg", image1bytes, 0644)
+	image1, err := vips.NewImageFromFile(fileName)
+	ep := vips.NewDefaultJPEGExportParams()
+	image1bytes, _, err := image1.Export(ep)
+	err = ioutil.WriteFile("output.jpg", image1bytes, 0644)
 
-	   	if err != nil {
-	   		return handler.Response{}, err
-	   	}
+	if err != nil {
+		return handler.Response{}, err
+	}
 
-	   	ep = vips.NewDefaultWEBPExportParams()
-	   	image1bytes, _, err = image1.Export(ep)
-	   	err = ioutil.WriteFile("output.webp", image1bytes, 0644)
+	ep = vips.NewDefaultWEBPExportParams()
+	image1bytes, _, err = image1.Export(ep)
+	err = ioutil.WriteFile("output.webp", image1bytes, 0644)
 
-	   	if err != nil {
-	   		return handler.Response{}, err
-	   	}
+	if err != nil {
+		return handler.Response{}, err
+	}
 
-	   	epaAvif := vips.NewAvifExportParams()
-	   	epaAvif.Quality = 90
-	   	epaAvif.Lossless = false
-	   	image1bytes, _, err = image1.ExportAvif(epaAvif)
+	epaAvif := vips.NewAvifExportParams()
+	epaAvif.Quality = 90
+	epaAvif.Lossless = false
+	image1bytes, _, err = image1.ExportAvif(epaAvif)
 
-	   	if err != nil {
-	   		return handler.Response{}, err
-	   	}
+	if err != nil {
+		return handler.Response{}, err
+	}
 
-	   	err = ioutil.WriteFile("output.avif", image1bytes, 0644) */
+	err = ioutil.WriteFile("output.avif", image1bytes, 0644)
 
 	return handler.Response{
 		Body:       []byte(out),
