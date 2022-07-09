@@ -3,20 +3,21 @@ package imageprocessing
 import (
 	"errors"
 	"fmt"
-	"github.com/davidbyttow/govips/v2/vips"
 	"handler/function/pkg/utils"
 	"io/ioutil"
 	"strconv"
+
+	"github.com/rs/zerolog/log"
+
+	"github.com/davidbyttow/govips/v2/vips"
 )
 
 func ImageConverter(size utils.OutputFormats, fileName string) error {
 
-	fmt.Println(fileName)
-
 	for _, format := range size {
 		for _, size := range format.Size {
-			fmt.Println("Format: ", format.Format, " Size: ", size.Width, "x", size.Height)
-			//outputNameNoSuffix := strings.TrimSuffix(filepath.Base(fileName), filepath.Ext(fileName))
+
+			log.Print("Format: ", format.Format, " Size: ", size.Width, "x", size.Height)
 
 			tmpIntConverter, err := strconv.ParseInt(size.Width, 0, 32)
 			sizeWidth := int(tmpIntConverter)
@@ -84,7 +85,6 @@ func ImageConverter(size utils.OutputFormats, fileName string) error {
 
 				imageBytes, _, err = image.ExportHeif(ep)
 			case "avif":
-				fmt.Println("AVIF")
 				ep := vips.NewAvifExportParams()
 				ep.Quality = 95
 
@@ -95,7 +95,7 @@ func ImageConverter(size utils.OutputFormats, fileName string) error {
 
 			outputFname := fmt.Sprintf("%s_cropped_%sx%s.%s", fileName, string(size.Width), string(size.Height), format.Format)
 			err = ioutil.WriteFile(outputFname, imageBytes, 0644)
-			fmt.Println("File name: ", outputFname)
+			log.Print("Output file: ", outputFname)
 		}
 	}
 	return nil

@@ -3,12 +3,13 @@ package storage
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"handler/function/pkg/utils"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/h2non/filetype"
 
@@ -18,7 +19,7 @@ import (
 )
 
 func InitStorage() (stow.Location, error) {
-	fmt.Println("Initializing storage")
+	log.Print("Initializing storage")
 	kind := "s3"
 	config := stow.ConfigMap{
 		s3.ConfigEndpoint:    "s3.eu-central-2.wasabisys.com",
@@ -29,7 +30,7 @@ func InitStorage() (stow.Location, error) {
 
 	location, err := stow.Dial(kind, config)
 	if err != nil {
-		fmt.Println("Error dialing", kind, ":", err)
+		log.Print("Error dialing", kind, ":", err)
 	}
 	return location, err
 }

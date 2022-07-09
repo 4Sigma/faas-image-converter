@@ -2,11 +2,13 @@ package function
 
 import (
 	"encoding/json"
-	"fmt"
 	"handler/function/pkg/imageprocessing"
 	"handler/function/pkg/storage"
 	"handler/function/pkg/utils"
 	"net/http"
+
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 
 	"github.com/davidbyttow/govips/v2/vips"
 	handler "github.com/openfaas/templates-sdk/go-http"
@@ -14,6 +16,9 @@ import (
 
 // Handle a function invocation
 func Handle(req handler.Request) (handler.Response, error) {
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	log.Print("hello world")
+
 	var dataImage utils.ImageGeneration
 
 	dataImage = utils.ImageConverter(req.Body)
@@ -28,24 +33,36 @@ func Handle(req handler.Request) (handler.Response, error) {
 		return handler.Response{}, err
 	}
 
-	fmt.Println("File name: ", fileName)
+	log.Print("File name: ", fileName)
 
+	vips.LoggingSettings(vipsLogger, vips.LogLevelInfo)
 	vips.Startup(nil)
 	defer vips.Shutdown()
 
-	fmt.Println("File name: ", fileName)
-
-	/* 	for _, format := range outputFormat {
-		for _, size := range format.Size {
-			fmt.Println("Format: ", format.Format, " Size: ", size.Width, "x", size.Height)
-			ep := vips.NewDefaultJPEGExportParams()
-		}
-	} */
-	//ep := vips.NewThumbnailWithSizeFromFile(image, 200, 200)
 	imageprocessing.ImageConverter(dataImage.OutputFormats, fileName)
 
 	return handler.Response{
 		Body:       []byte(out),
 		StatusCode: http.StatusOK,
 	}, err
+}
+
+func vipsLogger(messageDomain string, verbosity vips.LogLevel, message string) {
+	var messageLevelDescription string
+	switch verbosity {
+	case vips.LogLevelError:
+		messageLevelDescription = "error"
+	case vips.LogLevelCritical:
+		messageLevelDescription = "critical"
+	case vips.LogLevelWarning:
+		messageLevelDescription = "warning"
+	case vips.LogLevelMessage:
+		messageLevelDescription = "message"
+	case vips.LogLevelInfo:
+		messageLevelDescription = "info"
+	case vips.LogLevelDebug:
+		messageLevelDescription = "debug"
+	}
+
+	log.Print(messageDomain, messageLevelDescription, message)
 }
