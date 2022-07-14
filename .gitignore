@@ -17,3 +17,4 @@
 faas-image-processor
 tmp/**
 vips
+.envrc
