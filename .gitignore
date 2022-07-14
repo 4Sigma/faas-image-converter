@@ -19,3 +19,4 @@ tmp/**
 vips
 .envrc
 .go
+*.code-workspace
