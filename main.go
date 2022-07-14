@@ -12,6 +12,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/davidbyttow/govips/v2/vips"
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
 	"handler/function"
@@ -26,9 +28,16 @@ var (
 const defaultTimeout = 10 * time.Second
 
 func main() {
+
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+
 	readTimeout := parseIntOrDurationValue(os.Getenv("read_timeout"), defaultTimeout)
 	writeTimeout := parseIntOrDurationValue(os.Getenv("write_timeout"), defaultTimeout)
 	healthInterval := parseIntOrDurationValue(os.Getenv("healthcheck_interval"), writeTimeout)
+
+	vips.LoggingSettings(vipsLogger, vips.LogLevelInfo)
+	vips.Startup(nil)
+	defer vips.Shutdown()
 
 	s := &http.Server{
 		Addr:           fmt.Sprintf(":%d", 8082),
@@ -137,4 +146,24 @@ func parseIntOrDurationValue(val string, fallback time.Duration) time.Duration {
 		return fallback
 	}
 	return duration
+}
+
+func vipsLogger(messageDomain string, verbosity vips.LogLevel, message string) {
+	var messageLevelDescription string
+	switch verbosity {
+	case vips.LogLevelError:
+		messageLevelDescription = "error"
+	case vips.LogLevelCritical:
+		messageLevelDescription = "critical"
+	case vips.LogLevelWarning:
+		messageLevelDescription = "warning"
+	case vips.LogLevelMessage:
+		messageLevelDescription = "message"
+	case vips.LogLevelInfo:
+		messageLevelDescription = "info"
+	case vips.LogLevelDebug:
+		messageLevelDescription = "debug"
+	}
+
+	log.Print(messageDomain, messageLevelDescription, message)
 }
