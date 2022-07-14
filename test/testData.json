@@ -2,7 +2,8 @@
     "inputImage":{
         "storageType": "remote-http",
         "storageData": {
-            "url": "https://picsum.photos/5000/4000"
+            "url": "https://picsum.photos/5000/4000",
+            "x-callback-url": "http://localhost:8080/image/callback"
         }
     },
     "outputFormats": [
@@ -11,19 +12,28 @@
             "size": [
                 {
                     "width": "100",
-                    "height": "100"
+                    "height": "100",
+                    "quality": "70"
                 },
                 {
                     "width": "200",
-                    "height": "200"
+                    "height": "200",
+                    "quality": "70"
                 },
                 {
                     "width": "300",
-                    "height": "300"
+                    "height": "300",
+                    "quality": "70"
                 },
                 {
                     "width": "500",
-                    "height": "500"
+                    "height": "500",
+                    "quality": "70"
+                },
+                {
+                    "width": "1000",
+                    "height": "1000",
+                    "quality": "70"
                 }
             ]
         },
@@ -32,19 +42,23 @@
             "size": [
                 {
                     "width": "100",
-                    "height": "100"
+                    "height": "100",
+                    "quality": "70"
                 },
                 {
                     "width": "200",
-                    "height": "200"
+                    "height": "200",
+                    "quality": "70"
                 },
                 {
                     "width": "300",
-                    "height": "300"
+                    "height": "300",
+                    "quality": "70"
                 },
                 {
                     "width": "500",
-                    "height": "500"
+                    "height": "500",
+                    "quality": "70"
                 }
             ]
         },
@@ -53,19 +67,23 @@
             "size": [
                 {
                     "width": "100",
-                    "height": "100"
+                    "height": "100",
+                    "quality": "70"
                 },
                 {
                     "width": "200",
-                    "height": "200"
+                    "height": "200",
+                    "quality": "70"
                 },
                 {
                     "width": "300",
-                    "height": "300"
+                    "height": "300",
+                    "quality": "70"
                 },
                 {
                     "width": "500",
-                    "height": "500"
+                    "height": "500",
+                    "quality": "70"
                 }
             ]
         }
