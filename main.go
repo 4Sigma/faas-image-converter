@@ -28,7 +28,6 @@ var (
 const defaultTimeout = 10 * time.Second
 
 func main() {
-
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 
 	readTimeout := parseIntOrDurationValue(os.Getenv("read_timeout"), defaultTimeout)

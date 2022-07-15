@@ -15,23 +15,21 @@ import (
 // Handle a function invocation
 func Handle(req handler.Request) (handler.Response, error) {
 
-	var dataImage utils.ImageGeneration
+	var converterInput utils.ConverterInput = utils.ImageConverter(req.Body)
 
-	dataImage = utils.ImageConverter(req.Body)
-
-	out, err := json.Marshal(dataImage)
+	out, err := json.Marshal(converterInput)
 	if err != nil {
 		return handler.Response{}, err
 	}
 
-	fileName, err := storage.DownloadFile(dataImage)
+	fileName, err := storage.DownloadFile(converterInput)
 	if err != nil {
 		return handler.Response{}, err
 	}
 
 	log.Print("File name: ", fileName)
 
-	imageprocessing.ImageConverter(dataImage.OutputFormats, fileName)
+	imageprocessing.ImageConverter(fileName, converterInput.OutputFormats)
 
 	return handler.Response{
 		Body:       []byte(out),

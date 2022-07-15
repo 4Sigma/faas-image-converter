@@ -35,7 +35,7 @@ func InitStorage() (stow.Location, error) {
 	return location, err
 }
 
-func DownloadFile(image utils.ImageGeneration) (fileName string, err error) {
+func DownloadFile(image utils.ConverterInput) (fileName string, err error) {
 	if image.InputImage.StorageType == "remote-http" {
 		fileName, err = downloadRemoteHttp(image)
 		if err != nil {
@@ -51,7 +51,7 @@ func DownloadFile(image utils.ImageGeneration) (fileName string, err error) {
 	}
 }
 
-func downloadRemoteHttp(image utils.ImageGeneration) (filename string, err error) {
+func downloadRemoteHttp(image utils.ConverterInput) (filename string, err error) {
 
 	type RemoteHttp struct {
 		StorageType string `json:"storageType"`

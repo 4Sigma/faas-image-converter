@@ -20,3 +20,5 @@ vips
 .envrc
 .go
 *.code-workspace
+vendor
+vendor2

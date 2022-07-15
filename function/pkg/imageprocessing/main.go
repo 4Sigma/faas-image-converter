@@ -12,7 +12,7 @@ import (
 	"github.com/davidbyttow/govips/v2/vips"
 )
 
-func ImageConverter(size utils.OutputFormats, fileName string) error {
+func ImageConverter(fileName string, size utils.OutputFormats) error {
 
 	for _, format := range size {
 		for _, size := range format.Size {
