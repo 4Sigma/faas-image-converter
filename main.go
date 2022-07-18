@@ -45,7 +45,7 @@ func main() {
 		MaxHeaderBytes: 1 << 20, // Max header of 1MB
 	}
 
-	http.HandleFunc("/", makeRequestHandler())
+	http.HandleFunc("/", imageResizeView)
 	listenUntilShutdown(s, healthInterval, writeTimeout)
 }
 
@@ -85,51 +85,49 @@ func listenUntilShutdown(s *http.Server, shutdownTimeout time.Duration, writeTim
 	<-idleConnsClosed
 }
 
-func makeRequestHandler() func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var input []byte
+func imageResizeView(w http.ResponseWriter, r *http.Request) {
+	var input []byte
 
-		if r.Body != nil {
-			defer r.Body.Close()
+	if r.Body != nil {
+		defer r.Body.Close()
 
-			bodyBytes, bodyErr := io.ReadAll(r.Body)
+		bodyBytes, bodyErr := io.ReadAll(r.Body)
 
-			if bodyErr != nil {
-				log.Printf("Error reading body from request.")
-			}
-
-			input = bodyBytes
+		if bodyErr != nil {
+			log.Printf("Error reading body from request.")
 		}
 
-		req := handler.Request{
-			Body:        input,
-			Header:      r.Header,
-			Method:      r.Method,
-			QueryString: r.URL.RawQuery,
-		}
-		req.WithContext(r.Context())
-
-		result, resultErr := function.Handle(req)
-
-		if result.Header != nil {
-			for k, v := range result.Header {
-				w.Header()[k] = v
-			}
-		}
-
-		if resultErr != nil {
-			log.Print(resultErr)
-			w.WriteHeader(http.StatusInternalServerError)
-		} else {
-			if result.StatusCode == 0 {
-				w.WriteHeader(http.StatusOK)
-			} else {
-				w.WriteHeader(result.StatusCode)
-			}
-		}
-
-		w.Write(result.Body)
+		input = bodyBytes
 	}
+
+	req := handler.Request{
+		Body:        input,
+		Header:      r.Header,
+		Method:      r.Method,
+		QueryString: r.URL.RawQuery,
+	}
+	req.WithContext(r.Context())
+
+	result, resultErr := function.Handle(req)
+
+	if result.Header != nil {
+		for k, v := range result.Header {
+			w.Header()[k] = v
+		}
+	}
+
+	if resultErr != nil {
+		log.Print(resultErr)
+		w.WriteHeader(http.StatusInternalServerError)
+	} else {
+		if result.StatusCode == 0 {
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.WriteHeader(result.StatusCode)
+		}
+	}
+
+	w.Write(result.Body)
 }
 
 func parseIntOrDurationValue(val string, fallback time.Duration) time.Duration {
