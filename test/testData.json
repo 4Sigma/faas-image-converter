@@ -61,31 +61,6 @@
                     "quality": "70"
                 }
             ]
-        },
-        {
-            "format": "avif",
-            "size": [
-                {
-                    "width": "100",
-                    "height": "100",
-                    "quality": "70"
-                },
-                {
-                    "width": "200",
-                    "height": "200",
-                    "quality": "70"
-                },
-                {
-                    "width": "300",
-                    "height": "300",
-                    "quality": "70"
-                },
-                {
-                    "width": "500",
-                    "height": "500",
-                    "quality": "70"
-                }
-            ]
         }
     ]
 }
